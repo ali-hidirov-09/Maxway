@@ -1,0 +1,54 @@
+from django.db import connection
+from contextlib import closing
+
+
+def dict_fetchall(cursor):
+    columns = [col[0] for col in cursor.description]
+    return [
+        dict(zip(columns, row)) for row in cursor.fetchall()
+    ]
+
+
+def dict_fetchone(cursor):
+    row = cursor.fetchone()
+    if row is None:
+        return False
+    columns = [col[0] for col in cursor]
+    return  dict(zip(columns, row))
+
+
+def get_order_by_user(id):
+    with closing(connection.cursor()) as cursor:
+        cursor.execute("""SELECT Food_order.id, Food_customer.first_name, 
+        Food_customer.last_name, Food_order.address, Food_order.payment_type,
+        Food_order.status,  Food_order.created_at FROM Food_order 
+        INNER JOIN Food_customer ON Food_customer.id = Food_order.customer_id
+        WHERE Food_order.customer_id = %s
+        """, [id])
+        order = dict_fetchall(cursor)
+        return order
+
+
+def get_product_by_order(id):
+    with closing(connection.cursor()) as cursor:
+        cursor.execute("""
+        SELECT Food_orderproduct.count, Food_orderproduct.price, Food_orderproduct.created_at,
+        Food_product.title from Food_orderproduct INNER JOIN Food_product on
+        Food_orderproduct.product_id = Food_product.id where order_id = %s
+        """, [id])
+        order_product = dict_fetchall(cursor)
+        return order_product
+
+
+def get_table():
+    with closing(connection.cursor()) as cursor:
+        cursor.execute("""
+        SELECT Food_orderproduct.product_id, COUNT(Food_orderproduct.product_id), 
+        Food_product.title  FROM Food_orderproduct
+        INNER JOIN Food_product on Food_product.id = Food_orderproduct.product_id
+        GROUP BY Food_orderproduct.product_id, Food_product.title
+        order by count desc limit 10
+        """)
+        table = dict_fetchall(cursor)
+        return table
+
