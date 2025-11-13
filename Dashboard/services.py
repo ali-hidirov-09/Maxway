@@ -13,7 +13,7 @@ def dict_fetchone(cursor):
     row = cursor.fetchone()
     if row is None:
         return False
-    columns = [col[0] for col in cursor]
+    columns = [col[0] for col in cursor.description]
     return  dict(zip(columns, row))
 
 
@@ -33,7 +33,7 @@ def get_product_by_order(id):
     with closing(connection.cursor()) as cursor:
         cursor.execute("""
         SELECT Food_orderproduct.count, Food_orderproduct.price, Food_orderproduct.created_at,
-        Food_product.title from Food_orderproduct INNER JOIN Food_product on
+        Food_product.title FROM Food_orderproduct INNER JOIN Food_product ON
         Food_orderproduct.product_id = Food_product.id where order_id = %s
         """, [id])
         order_product = dict_fetchall(cursor)
@@ -43,11 +43,14 @@ def get_product_by_order(id):
 def get_table():
     with closing(connection.cursor()) as cursor:
         cursor.execute("""
-        SELECT Food_orderproduct.product_id, COUNT(Food_orderproduct.product_id), 
-        Food_product.title  FROM Food_orderproduct
-        INNER JOIN Food_product on Food_product.id = Food_orderproduct.product_id
-        GROUP BY Food_orderproduct.product_id, Food_product.title
-        order by count desc limit 10
+        SELECT fo.product_id, COUNT(fo.product_id), 
+       fp.title  
+FROM "Food_orderproduct" fo 
+INNER JOIN "Food_product" fp 
+    ON fp.id = fo.product_id
+GROUP BY fo.product_id, fp.title
+ORDER BY count DESC
+LIMIT 10;
         """)
         table = dict_fetchall(cursor)
         return table

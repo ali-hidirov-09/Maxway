@@ -1,3 +1,4 @@
+from django.db.models import Count
 from  django.shortcuts import render, redirect
 from Food.models import *
 from . import forms
@@ -12,7 +13,7 @@ def login_required_decorator(func):
 
 @login_required_decorator
 def main_dashboard(request):
-    categories = Category.objects.all()
+    categories = Category.objects.annotate(product_count=Count('product'))
     products = Product.objects.all()
     orders = Order.objects.all()
     customers = Customer.objects.all()

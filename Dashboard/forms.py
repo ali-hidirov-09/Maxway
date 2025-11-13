@@ -17,9 +17,9 @@ class ProductForm(forms.ModelForm):
             "title": forms.TextInput(attrs={'class': 'form_control'}),
             "description": forms.TextInput(attrs={'class': 'form_control'}),
             "category": forms.Select(attrs={'class': 'form_control'}),
-            "cost": forms.IntegerField(attrs={'class': 'form_control'}),
-            "price": forms.IntegerField(attrs={'class': 'form_control'}),
-            "image": forms.ImageField(attrs={'class': 'form_control', 'onchange':'loadFile(event)'}),
+            "cost": forms.TextInput(attrs={'class': 'form_control'}),
+            "price": forms.TextInput(attrs={'class': 'form_control'}),
+            "image": forms.FileInput(attrs={'class': 'form_control', 'onchange':'loadFile(event)'}),
         }
 
 class UserForm(forms.ModelForm):

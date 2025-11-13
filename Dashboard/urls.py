@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import *
 
-ulpatterns = [
+urlpatterns = [
     path('', main_dashboard, name='main_dashboard'),
     path('login_page/', login_page, name='login_page'),
     path('logout_page/', logout_page, name='logout_page'),
@@ -24,4 +24,4 @@ ulpatterns = [
     path('order/list/', order_list, name='order_list'),
     path('orderproduct/<int:id>/list', orderproduct_list, name='orderproduct_list'),
     path('customer_order/<int:id>/list', customer_order_list, name='customer_order_list'),
-]
+    ]
