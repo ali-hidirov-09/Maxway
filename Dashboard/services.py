@@ -19,11 +19,11 @@ def dict_fetchone(cursor):
 
 def get_order_by_user(id):
     with closing(connection.cursor()) as cursor:
-        cursor.execute("""SELECT Food_order.id, Food_customer.first_name, 
-        Food_customer.last_name, Food_order.address, Food_order.payment_type,
-        Food_order.status,  Food_order.created_at FROM Food_order 
-        INNER JOIN Food_customer ON Food_customer.id = Food_order.customer_id
-        WHERE Food_order.customer_id = %s
+        cursor.execute("""SELECT fo.id, fc.first_name, 
+        fc.last_name, fo.address, fo.payment_type,
+        fo.status,  fo.created_at FROM "Food_order" fo 
+        INNER JOIN "Food_customer" fc  ON fc.id = fo.customer_id 
+        WHERE fo.customer_id = %s
         """, [id])
         order = dict_fetchall(cursor)
         return order
@@ -32,9 +32,9 @@ def get_order_by_user(id):
 def get_product_by_order(id):
     with closing(connection.cursor()) as cursor:
         cursor.execute("""
-        SELECT Food_orderproduct.count, Food_orderproduct.price, Food_orderproduct.created_at,
-        Food_product.title FROM Food_orderproduct INNER JOIN Food_product ON
-        Food_orderproduct.product_id = Food_product.id where order_id = %s
+        SELECT fo.count, fo.price, fo.created_at,
+        fp.title FROM "Food_orderproduct" fo  INNER JOIN "Food_product" fp  ON
+        fo.product_id = fp.id where order_id = %s
         """, [id])
         order_product = dict_fetchall(cursor)
         return order_product
@@ -44,13 +44,13 @@ def get_table():
     with closing(connection.cursor()) as cursor:
         cursor.execute("""
         SELECT fo.product_id, COUNT(fo.product_id), 
-       fp.title  
-FROM "Food_orderproduct" fo 
-INNER JOIN "Food_product" fp 
-    ON fp.id = fo.product_id
-GROUP BY fo.product_id, fp.title
-ORDER BY count DESC
-LIMIT 10;
+        fp.title  
+        FROM "Food_orderproduct" fo 
+        INNER JOIN "Food_product" fp 
+        ON fp.id = fo.product_id
+        GROUP BY fo.product_id, fp.title
+        ORDER BY count DESC
+        LIMIT 10;
         """)
         table = dict_fetchall(cursor)
         return table
