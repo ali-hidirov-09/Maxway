@@ -624,37 +624,30 @@
         }
 
         function check_orders(product_id) {
-            orders = JSON.parse(getCookie("orders"));
+    var orders_str = getCookie("orders");
+    var orders = orders_str ? JSON.parse(orders_str) : {};
+    // yoki:
+    // var orders = JSON.parse(orders_str || '{}');
 
-            if (orders == null) {
-                orders = {};
-            }
-            if (product_id + "" in orders) {
-                orders[product_id + ""] = orders[product_id + ""] + 1;
-            } else {
-                orders[product_id + ""] = 1;
-            }
-            return orders;
-        }
+    if (product_id in orders) {
+        orders[product_id] = orders[product_id] + 1;
+    } else {
+        orders[product_id] = 1;
+    }
+    return orders;
+}
 
         function delete_orders() {
-            document.cookie = "orders=" + JSON.stringify({}) + ";"
-            document.cookie = "total_price=0;"
-            var cartTotal = cart.attr('data-totalitems');
-            var newCartTotal = 0;
-            cart.addClass('shake').attr('data-totalitems', newCartTotal);
+    document.cookie = "orders=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "total_price=0; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-            orders = document.getElementById("order-list");
-            total_price = document.getElementById("total_price");
-            home_price = document.getElementById("home_price");
+    document.getElementById("order-list").innerHTML = "";
+    document.getElementById("total_price").innerHTML = "0 <span>UZS</span>";
+    document.getElementById("home_price").innerHTML = '<p style="color:white">Korzinka:</p>0 <span>UZS</span>';
 
-            orders.innerHTML = "";
-            total_price.innerHTML = "0 <span> UZS</span>";
-            home_price.innerHTML = "0 <span> UZS</span>";
-
-            total_price.setAttribute("data-id", 0);
-        }
-
+    var cart = document.getElementById("cart");
+    if (cart) cart.setAttribute("data-totalitems", "0");
+}
         function cart_add(product_id) {
             orders_list = document.getElementById("order-list");
             total_price = document.getElementById("total_price");
@@ -691,7 +684,25 @@
             }
             setCookie("orders", JSON.stringify(orders));
         }
-
+        function modal() {
+    var modal = document.querySelector('.modal');
+    if (modal) {
+        modal.style.display = 'block';
+        // Agar modal oynada "close" tugmasi bo'lsa, unga event qo'shish
+        var closeBtn = modal.querySelector('.close');
+        if (closeBtn) {
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+            }
+        }
+        // Tashqi qismga bosilganda ham yopish
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    }
+}
         function order_func() {
             order_list = document.getElementById("order-list")
             order_btn = document.getElementById("order_btn")

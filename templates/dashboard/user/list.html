@@ -32,6 +32,8 @@
                                          <th>First name</th>
                                         <th>Last name</th>
                                         <th>Phone number</th>
+                                        <th>Address</th>
+                                        <th>Email</th>
                                         <th>Created at</th>
                                         <th></th>
 
@@ -46,6 +48,8 @@
                                         <td><a href="{% url 'customer_order_list' id=user.id %}">{{ user.first_name }}</a></td>
                                         <td>{{ user.last_name }}</td>
                                         <td>{{ user.phone_number }}</td>
+                                        <td>{{ user.adres }}</td>
+                                        <td>{{ user.email }}</td>
                                         <td>{{ user.created_at }}</td>
 
                                         <td>
