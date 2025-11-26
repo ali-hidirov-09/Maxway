@@ -24,14 +24,14 @@ def get_product_by_id(product_id):
 
 def get_orderproduct_by_id(product_id):
     with closing(connection.cursor()) as cursor:
-        cursor.execute("""SELECT * from 'Food_orderproduct' fo where id=%s""",[product_id])
+        cursor.execute("""SELECT * from "Food_orderproduct" fo where id=%s""",[product_id])
         product = dictfetchone(cursor)
         return product
 
 
 def get_user_by_phone(phone_number):
     with closing(connection.cursor()) as cursor:
-        cursor.execute(""" SELECT * from 'Food_customer' fc where phone_number =%s""",[phone_number])
+        cursor.execute(""" SELECT * from "Food_customer" fc where phone_number =%s""",[phone_number])
         user = dictfetchone(cursor)
         return user
 

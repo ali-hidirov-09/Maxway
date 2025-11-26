@@ -27,18 +27,28 @@ class Customer(models.Model):
     last_name = models.CharField(max_length=100, null=False, blank=False)
     phone_number = models.CharField(unique=True, max_length=100, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    email = models.EmailField(null=True, blank=True)
+    adres = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
 
 class Order(models.Model):
-    payment_type = models.IntegerField(null=False, blank=False)
-    status = models.IntegerField(null=False, blank=False)
+    PAYMENT_CHOICES = (
+        (1, "Naqd"),
+        (2, "Terminal"),
+    )
+    STATUS_CHOICES = (
+        (1, "Yangi"),
+        (2, "Tasdiqlangan"),
+    )
+
+    payment_type = models.IntegerField(choices=PAYMENT_CHOICES, null=False, blank=False)
+    status = models.IntegerField(choices=STATUS_CHOICES, null=False, blank=False)
     address = models.CharField(max_length=300, null=False, blank=False)
     customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
-
 
 class OrderProduct(models.Model):
     count = models.IntegerField(null=False, blank=False)
