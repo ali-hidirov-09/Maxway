@@ -201,13 +201,16 @@ def order_list(request):
     }
     return render(request, "dashboard/order/list.html", ctx)
 
+
 @login_required_decorator
 def orderproduct_list(request, id):
     productorders = services.get_product_by_order(id=id)
+    for pro in productorders:
+        pro['total'] = pro['count'] * pro['price']
     ctx = {
-        'productorders':productorders
+        'productorders': productorders
     }
-    return render(request,"dashboard/productorder/list.html", ctx)
+    return render(request, "dashboard/productorder/list.html", ctx)
 
 
 @login_required_decorator
