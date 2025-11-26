@@ -37,10 +37,11 @@
                                 <tbody>
                                     {% for pro in productorders %}
                                     <tr>
+                                        <td>{{ forloop.counter }}</td>
                                         <td>{{ pro.title }}</td>
                                         <td>{{ pro.price }}</td>
                                         <td>{{ pro.count }}</td>
-                                        <td>{{ pro.count|mul:pro.price }}</td>
+                                        <td>{{ pro.total }}</td>
                                         <td>{{ pro.created_at }}</td>
                                     </tr>
                                     {% endfor %}
